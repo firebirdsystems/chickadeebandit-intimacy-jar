@@ -1,0 +1,75 @@
+{
+  "id": "intimacy-jar",
+  "name": "Intimacy Jar",
+  "version": "1.0.0",
+  "description": "A shared jar of ideas for couples — add activities and scenarios privately, then draw one at random for spontaneity.",
+  "entrypoint": "index.html",
+  "runtime": "static",
+  "category": "couple",
+  "tags": ["couples"],
+  "data_access": {
+    "reads": ["family.members"],
+    "writes": []
+  },
+  "permissions": {
+    "default_audience": "adults",
+    "requires_approval": false
+  },
+  "storage": "db",
+  "partner_link": {
+    "table": "partner_config",
+    "member_column": "member_id",
+    "partner_id_column": "partner_id",
+    "session_id_column": "session_id",
+    "require_role": "adult"
+  },
+  "couple_item_state": {
+    "table": "jar_items",
+    "id_column": "id",
+    "owner_column": "created_by",
+    "partner_table": "partner_config",
+    "partner_member_column": "member_id",
+    "partner_id_column": "partner_id",
+    "partner_session_id_column": "session_id",
+    "session_id_column": "session_id",
+    "state_at_column": "tried_at",
+    "rating_column": "rating",
+    "note_column": "tried_note",
+    "require_reciprocal": true,
+    "max_note_length": 1000,
+    "min_rating": 1,
+    "max_rating": 5
+  },
+  "row_policies": {
+    "partner_config": {
+      "kind": "owner_only",
+      "member_column": "member_id",
+      "adults_bypass": false,
+      "endpoint_writes_only": true
+    },
+    "jar_items": {
+      "kind": "couple_scoped",
+      "self_column": "created_by",
+      "participant_columns": ["created_by"],
+      "partner_table": "partner_config",
+      "partner_member_column": "member_id",
+      "partner_id_column": "partner_id",
+      "session_column": "session_id",
+      "partner_session_id_column": "session_id",
+      "require_reciprocal": true,
+      "updates_via_endpoint_only": true,
+      "delete_owner_only": true,
+      "column_write_acls": {
+        "tried_at": { "writable_by": [], "actions": ["insert"] },
+        "rating": { "writable_by": [], "actions": ["insert"] },
+        "tried_note": { "writable_by": [], "actions": ["insert"] }
+      },
+      "insert_max_lengths": {
+        "title": 200,
+        "notes": 2000
+      }
+    }
+  },
+  "icon": "🫙",
+  "nav": { "label": "Intimacy Jar" }
+}

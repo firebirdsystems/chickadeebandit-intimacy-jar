@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/run/intimacy-jar/" />
+  <title>Intimacy Jar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--hub-font, system-ui, sans-serif);
+      font-size: var(--hub-font-size, 15px);
+      background: var(--hub-bg, #f9fafb);
+      color: var(--hub-text, #111827);
+      min-height: 100vh;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ── Setup view ── */
+    .setup-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 48px 20px; min-height: 80vh; justify-content: center;
+    }
+    .setup-card {
+      background: var(--hub-surface, #fff);
+      border: 1px solid var(--hub-border, #e5e7eb);
+      border-radius: var(--hub-radius, 8px);
+      padding: 32px; max-width: 420px; width: 100%; text-align: center;
+    }
+    .setup-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .setup-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .setup-card .setup-desc { color: var(--hub-text-muted, #6b7280); font-size: 0.9rem; margin-bottom: 24px; }
+    .setup-card .pick-label { font-weight: 600; margin-bottom: 12px; text-align: left; display: block; }
+    .member-list { margin-bottom: 20px; }
+    .member-option {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border: 1px solid var(--hub-border, #e5e7eb); border-radius: var(--hub-radius, 6px);
+      cursor: pointer; margin-bottom: 6px; transition: border-color .15s, background .15s; text-align: left;
+    }
+    .member-option input[type="radio"] { accent-color: var(--hub-primary, #6366f1); }
+    .member-option:has(input:checked) {
+      border-color: var(--hub-primary, #6366f1);
+      background: color-mix(in srgb, var(--hub-primary, #6366f1) 6%, transparent);
+    }
+    .member-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .member-name { font-weight: 500; font-size: 0.95rem; }
+
+    /* ── App header ── */
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px 0;
+    }
+    .app-header-left { display: flex; align-items: center; gap: 8px; }
+    .app-header .icon { font-size: 1.3rem; }
+    .app-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    /* ── Jar hero ── */
+    .jar-hero {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 28px 20px 20px; text-align: center;
+    }
+    .jar-emoji { font-size: 4rem; margin-bottom: 12px; line-height: 1; }
+    .jar-count { font-size: 0.95rem; color: var(--hub-text-muted, #6b7280); margin-bottom: 20px; }
+    .jar-count strong { color: var(--hub-text, #111827); font-weight: 600; }
+    .btn-draw {
+      background: var(--hub-primary, #6366f1); color: var(--hub-primary-fg, #fff);
+      border: none; border-radius: var(--hub-radius, 6px);
+      padding: 14px 32px; font-size: 1.05rem; font-weight: 700; cursor: pointer;
+      transition: opacity .15s; display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--hub-primary, #6366f1) 30%, transparent);
+    }
+    .btn-draw:hover:not(:disabled) { opacity: .88; }
+    .btn-draw:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: flex; justify-content: center; gap: 24px;
+      padding: 0 20px 16px; font-size: 0.85rem; color: var(--hub-text-muted, #6b7280);
+    }
+    .stats-row .stat strong { color: var(--hub-text, #111827); font-weight: 600; display: block; font-size: 1.1rem; }
+
+    /* ── Content ── */
+    .content { padding: 0 20px 20px; }
+
+    /* ── Section toggle ── */
+    .section-toggle {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--hub-text-muted, #6b7280); font-size: 0.9rem; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 0 8px; margin-bottom: 0; width: 100%;
+    }
+    .section-toggle:hover { color: var(--hub-text, #111827); }
+
+    /* ── Item cards ── */
+    .items-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .item-card {
+      background: var(--hub-surface, #fff);
+      border: 1px solid var(--hub-border, #e5e7eb);
+      border-radius: var(--hub-radius, 8px);
+      padding: 12px 14px;
+    }
+    .item-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .item-card-left { flex: 1; min-width: 0; }
+    .item-title { font-weight: 500; font-size: 0.95rem; line-height: 1.4; word-break: break-word; }
+    .item-title.tried { text-decoration: line-through; opacity: .55; }
+    .item-notes { font-size: 0.85rem; color: var(--hub-text-muted, #6b7280); margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
+    .item-tried-note { font-size: 0.85rem; color: var(--hub-text-muted, #6b7280); margin-top: 4px; font-style: italic; }
+    .item-meta { margin-top: 6px; font-size: 0.78rem; color: var(--hub-text-muted, #6b7280); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .category-badge {
+      display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 2px 7px;
+      border-radius: 999px; background: color-mix(in srgb, var(--hub-primary, #6366f1) 10%, transparent);
+      color: var(--hub-primary, #6366f1);
+    }
+    .stars { color: #f59e0b; font-size: 0.85rem; letter-spacing: -.05em; }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 32px 20px; color: var(--hub-text-muted, #6b7280); }
+    .empty-state .empty-icon { font-size: 2rem; margin-bottom: 10px; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      background: var(--hub-primary, #6366f1); color: var(--hub-primary-fg, #fff);
+      border: none; border-radius: var(--hub-radius, 6px);
+      padding: 10px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: opacity .15s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary:hover:not(:disabled) { opacity: .85; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-secondary {
+      background: transparent; color: var(--hub-text, #111827);
+      border: 1px solid var(--hub-border, #e5e7eb);
+      border-radius: var(--hub-radius, 6px);
+      padding: 10px 20px; font-size: 0.95rem; font-weight: 500; cursor: pointer;
+    }
+    .btn-secondary:hover { background: var(--hub-bg, #f9fafb); }
+    .btn-icon {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--hub-text-muted, #6b7280); padding: 6px;
+      border-radius: var(--hub-radius, 4px); font-size: 1rem; line-height: 1;
+    }
+    .btn-icon:hover { color: var(--hub-text, #111827); background: var(--hub-bg, #f9fafb); }
+    .btn-sm {
+      padding: 6px 12px; font-size: 0.82rem; font-weight: 500;
+      border: 1px solid var(--hub-border, #e5e7eb); border-radius: var(--hub-radius, 4px);
+      background: transparent; cursor: pointer; color: var(--hub-text, #111827);
+      white-space: nowrap;
+    }
+    .btn-sm:hover { background: var(--hub-bg, #f9fafb); }
+
+    /* ── Modal ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
+    }
+    .modal {
+      background: var(--hub-surface, #fff); border-radius: var(--hub-radius, 8px);
+      padding: 24px; width: 100%; max-width: 460px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.18); max-height: 90vh; overflow-y: auto;
+    }
+    .modal h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 5px; font-size: 0.9rem; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 9px 12px;
+      border: 1px solid var(--hub-border, #e5e7eb);
+      border-radius: var(--hub-radius, 6px);
+      background: var(--hub-bg, #f9fafb);
+      color: var(--hub-text, #111827);
+      font-family: inherit; font-size: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: 2px solid var(--hub-primary, #6366f1); outline-offset: 1px;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+    /* ── Draw modal specifics ── */
+    .draw-item-display {
+      background: color-mix(in srgb, var(--hub-primary, #6366f1) 6%, transparent);
+      border: 1px solid color-mix(in srgb, var(--hub-primary, #6366f1) 20%, transparent);
+      border-radius: var(--hub-radius, 8px);
+      padding: 20px; margin-bottom: 20px; text-align: center;
+    }
+    .draw-item-display .draw-category { font-size: 0.8rem; color: var(--hub-text-muted, #6b7280); margin-bottom: 8px; }
+    .draw-item-display .draw-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .draw-item-display .draw-notes { font-size: 0.88rem; color: var(--hub-text-muted, #6b7280); white-space: pre-wrap; }
+    .draw-actions { display: flex; flex-direction: column; gap: 8px; }
+    .draw-actions .btn-primary { justify-content: center; }
+    .draw-actions .btn-secondary { justify-content: center; }
+    .draw-actions-row { display: flex; gap: 8px; }
+    .draw-actions-row button { flex: 1; justify-content: center; }
+
+    /* ── Star rating picker ── */
+    .star-picker { display: flex; gap: 6px; font-size: 1.6rem; cursor: pointer; }
+    .star-picker .star { color: var(--hub-border, #e5e7eb); transition: color .1s; }
+    .star-picker .star.selected { color: #f59e0b; }
+    .star-picker .star:hover { color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Setup view ── -->
+  <div id="view-setup" class="view">
+    <div class="setup-wrap">
+      <div class="setup-card">
+        <div class="setup-icon">🫙</div>
+        <h2>Intimacy Jar</h2>
+        <p class="setup-desc">A shared jar of ideas for just the two of you. Add activities privately, then draw one at random.</p>
+        <span class="pick-label">Who is your partner?</span>
+        <div id="setup-members" class="member-list"></div>
+        <button class="btn-primary" style="width:100%;justify-content:center" onclick="savePartner()">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main view ── -->
+  <div id="view-main" class="view">
+    <div class="app-header">
+      <div class="app-header-left">
+        <span class="icon">🫙</span>
+        <h1>Intimacy Jar</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn-icon" title="Change partner" onclick="showSetup()">⚙️</button>
+        <button class="btn-primary" onclick="openAddItem()">+ Add</button>
+      </div>
+    </div>
+
+    <div class="jar-hero">
+      <div class="jar-emoji">🫙</div>
+      <div id="jar-count" class="jar-count"></div>
+      <button id="btn-draw" class="btn-draw" onclick="drawFromJar()">✨ Draw from Jar</button>
+    </div>
+
+    <div id="stats-row" class="stats-row"></div>
+
+    <div class="content">
+      <div id="untried-section"></div>
+      <div id="tried-section"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { hubAlert, esc, initial, memberColor, formatRelativeDate, hubConfirm } from "/hub-sdk.js";
+    import { CATEGORIES, validateItem, categoryLabel, randomUntried, averageRating } from "./logic.js";
+
+    const CONTEXT = window.__CONTEXT_URL    ?? "";
+    const DB      = window.__DB_URL         ?? "";
+    const ME      = window.__CURRENT_MEMBER ?? null;
+    const APP_ID  = window.__APP_ID         ?? "intimacy-jar";
+
+    let members          = [];
+    let partner          = null;
+    let partnerReciprocal = false;
+    let items            = [];
+    let modalEl          = null;
+    let drawnItem        = null;
+    let triedVisible     = false;
+    let untriedVisible   = true;
+    let selectedRating   = 0;
+
+    // ── DB helper ─────────────────────────────────────────────────────────────
+    async function db(sql, params = []) {
+      if (!DB) return { rows: [] };
+      const res = await fetch(DB, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sql, params }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload.error) {
+        throw new Error(payload.error ?? `Database request failed (${res.status})`);
+      }
+      return payload;
+    }
+
+    async function markItemTried(id, rating, note) {
+      if (!ME) {
+        return { state_at: new Date().toISOString(), rating, note: note || null };
+      }
+      const res = await fetch(`/run/${APP_ID}/api/couple-item-state`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, rating, note }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(payload.error ?? `Could not update item (${res.status})`);
+      return payload;
+    }
+
+    // ── Data loading ─────────────────────────────────────────────────────────
+    async function loadMembers() {
+      if (!CONTEXT) {
+        members = [
+          { id: "demo-1", name: "Alex",   role: "adult" },
+          { id: "demo-2", name: "Jordan", role: "adult" },
+        ];
+        return;
+      }
+      try {
+        const res = await fetch(`${CONTEXT}?keys=family.members`);
+        members = ((await res.json())["family.members"]) ?? [];
+      } catch { members = []; }
+    }
+
+    async function loadPartner() {
+      if (!ME) return null;
+      const res = await fetch(`/run/${APP_ID}/api/partner`);
+      const status = res.ok ? await res.json() : { partner_id: null, reciprocal: false };
+      partnerReciprocal = status.reciprocal;
+      return status.partner_id ? (members.find(m => m.id === status.partner_id) ?? null) : null;
+    }
+
+    async function loadItems() {
+      if (!ME || !partner) {
+        items = [
+          { id: "d1", created_by: "demo-1", title: "Candlelit dinner at home", notes: "Cook together, no phones", category: "romantic", tried_at: null, rating: null, tried_note: null, created_at: new Date(Date.now() - 86400000).toISOString() },
+          { id: "d2", created_by: "demo-2", title: "Slow dance in the living room", notes: "", category: "romantic", tried_at: null, rating: null, tried_note: null, created_at: new Date(Date.now() - 172800000).toISOString() },
+          { id: "d3", created_by: "demo-1", title: "Watch a sunrise together", notes: "Pack coffee", category: "adventurous", tried_at: null, rating: null, tried_note: null, created_at: new Date(Date.now() - 259200000).toISOString() },
+          { id: "d4", created_by: "demo-2", title: "Give each other massages", notes: "", category: "intimate", tried_at: new Date(Date.now() - 604800000).toISOString(), rating: 5, tried_note: "Absolutely perfect evening.", created_at: new Date(Date.now() - 700000000).toISOString() },
+        ];
+        return;
+      }
+      const { rows } = await db(
+        "SELECT * FROM app_intimacy_jar__jar_items WHERE created_by IN (?, ?) ORDER BY created_at DESC",
+        [ME.id, partner.id]
+      );
+      items = rows;
+    }
+
+    // ── Partner setup ─────────────────────────────────────────────────────────
+    window.savePartner = async function() {
+      const sel = document.querySelector('#setup-members input[type="radio"]:checked');
+      if (!sel) return;
+      const partnerId = sel.value;
+      const btn = document.querySelector('#view-setup .btn-primary');
+      if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+      try {
+        const res = ME ? await fetch(`/run/${APP_ID}/api/partner`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ partner_id: partnerId }),
+        }) : null;
+        if (res && !res.ok) throw new Error((await res.json()).error ?? "Could not save partner");
+        const status = res ? await res.json() : { reciprocal: true };
+        partnerReciprocal = status.reciprocal;
+        partner = members.find(m => m.id === partnerId) ?? null;
+        if (!partnerReciprocal) {
+          if (btn) { btn.disabled = false; btn.textContent = "Check Again"; }
+          window.showSetup();
+          showWaitingForPartner();
+          return;
+        }
+        await loadItems();
+        showMain();
+      } catch(e) {
+        if (btn) { btn.disabled = false; btn.textContent = "Get Started"; }
+        hubAlert(e.message ?? "Could not save partner");
+      }
+    };
+
+    // ── Modal helpers ─────────────────────────────────────────────────────────
+    function openModal(html) {
+      closeModal();
+      modalEl = document.createElement("div");
+      modalEl.className = "modal-backdrop";
+      modalEl.innerHTML = `<div class="modal">${html}</div>`;
+      modalEl.addEventListener("click", e => { if (e.target === modalEl) closeModal(); });
+      document.body.appendChild(modalEl);
+    }
+    window.closeModal = function() { modalEl?.remove(); modalEl = null; drawnItem = null; selectedRating = 0; };
+
+    window.showWaitingForPartner = function() {
+      const name = esc(partner?.name ?? "your partner");
+      openModal(`
+        <h3>Waiting for ${name}</h3>
+        <p style="color:var(--hub-text-muted,#6b7280);font-size:.9rem;line-height:1.5;margin-top:8px">
+          You've chosen ${name}. As soon as they choose you back, you'll be paired up.
+        </p>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal()">Close</button>
+          <button class="btn-primary" onclick="closeModal(); savePartner()">Check Again</button>
+        </div>
+      `);
+    };
+
+    // ── Add item ──────────────────────────────────────────────────────────────
+    window.openAddItem = function() {
+      const catOptions = CATEGORIES.map(c =>
+        `<option value="${esc(c.value)}">${esc(c.label)}</option>`
+      ).join("");
+      openModal(`
+        <h3>Add to the Jar</h3>
+        <div class="form-group">
+          <label>What's the idea?</label>
+          <input id="f-title" type="text" placeholder="e.g. Watch a sunset at the beach" />
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="f-category">${catOptions}</select>
+        </div>
+        <div class="form-group">
+          <label>Notes <span style="color:var(--hub-text-muted,#6b7280);font-weight:400">(optional)</span></label>
+          <textarea id="f-notes" placeholder="Any details or context…"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="submitItem()">Add to Jar</button>
+        </div>
+      `);
+      document.getElementById("f-title").focus();
+    };
+
+    window.submitItem = async function() {
+      const titleInput = document.getElementById("f-title");
+      const result = validateItem(titleInput?.value);
+      if (!result.valid) { titleInput?.focus(); return; }
+
+      const btn = modalEl?.querySelector(".modal-actions .btn-primary");
+      if (btn) { btn.disabled = true; btn.textContent = "Adding…"; }
+      try {
+        const id  = crypto.randomUUID();
+        const now = new Date().toISOString();
+        const newItem = {
+          id,
+          created_by: ME?.id ?? "demo-1",
+          title:      result.trimmed,
+          notes:      document.getElementById("f-notes")?.value.trim() ?? "",
+          category:   document.getElementById("f-category")?.value ?? "other",
+          tried_at: null, rating: null, tried_note: null,
+          created_at: now,
+        };
+        if (newItem.notes.length > 2000) {
+          throw new Error("Notes must be 2,000 characters or fewer");
+        }
+        if (ME) {
+          await db(
+            "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, notes, category, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [id, ME.id, null, newItem.title, newItem.notes, newItem.category, now]
+          );
+        }
+        items = [newItem, ...items];
+        closeModal();
+        render();
+      } catch(e) {
+        if (btn) { btn.disabled = false; btn.textContent = "Add to Jar"; }
+        hubAlert(e.message ?? "Could not add this idea");
+      }
+    };
+
+    // ── Draw from jar ─────────────────────────────────────────────────────────
+    window.drawFromJar = function() {
+      drawnItem = randomUntried(items);
+      if (!drawnItem) return;
+      showDrawModal(drawnItem);
+    };
+
+    function showDrawModal(item) {
+      openModal(`
+        <h3>🎲 You Drew…</h3>
+        <div class="draw-item-display">
+          <div class="draw-category">${esc(categoryLabel(item.category))}</div>
+          <div class="draw-title">${esc(item.title)}</div>
+          ${item.notes ? `<div class="draw-notes">${esc(item.notes)}</div>` : ""}
+        </div>
+        <div class="draw-actions">
+          <button class="btn-primary" onclick="openRateModal()">✓ We did it!</button>
+          <div class="draw-actions-row">
+            <button class="btn-secondary" onclick="drawAgain()">🎲 Draw Again</button>
+            <button class="btn-secondary" onclick="closeModal()">Put Back</button>
+          </div>
+        </div>
+      `);
+    }
+
+    window.drawAgain = function() {
+      const untried = items.filter(i => !i.tried_at && i.id !== drawnItem?.id);
+      if (!untried.length) return;
+      drawnItem = untried[Math.floor(Math.random() * untried.length)];
+      showDrawModal(drawnItem);
+    };
+
+    // ── Rate modal ────────────────────────────────────────────────────────────
+    window.openRateModal = function(itemId) {
+      if (itemId) {
+        drawnItem = items.find(i => i.id === itemId) ?? null;
+      }
+      if (!drawnItem) return;
+      selectedRating = 0;
+      openModal(`
+        <h3>How was it? 🎉</h3>
+        <p style="color:var(--hub-text-muted,#6b7280);margin-bottom:16px;font-size:.9rem">${esc(drawnItem.title)}</p>
+        <div class="form-group">
+          <label>Rating <span style="color:var(--hub-text-muted,#6b7280);font-weight:400">(optional)</span></label>
+          <div class="star-picker" id="star-picker">
+            ${[1,2,3,4,5].map(n => `<span class="star" data-value="${n}" onclick="selectStar(${n})">★</span>`).join("")}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Note <span style="color:var(--hub-text-muted,#6b7280);font-weight:400">(optional)</span></label>
+          <textarea id="f-tried-note" placeholder="A moment to remember…"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="confirmTried()">Save</button>
+        </div>
+      `);
+    };
+
+    window.selectStar = function(n) {
+      selectedRating = n;
+      const stars = modalEl?.querySelectorAll(".star");
+      stars?.forEach(s => {
+        const v = parseInt(s.dataset.value, 10);
+        s.classList.toggle("selected", v <= n);
+      });
+    };
+
+    window.confirmTried = async function() {
+      if (!drawnItem) return;
+      const btn = modalEl?.querySelector(".modal-actions .btn-primary");
+      if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+      try {
+        const triedNote = document.getElementById("f-tried-note")?.value.trim() ?? "";
+        const rating    = selectedRating || null;
+        if (triedNote.length > 1000) throw new Error("Note must be 1,000 characters or fewer");
+        const result = await markItemTried(drawnItem.id, rating, triedNote);
+        items = items.map(i => i.id === drawnItem.id
+          ? { ...i, tried_at: result.state_at, rating: result.rating, tried_note: result.note }
+          : i);
+        closeModal();
+        render();
+      } catch(e) {
+        if (btn) { btn.disabled = false; btn.textContent = "Save"; }
+        hubAlert(e.message ?? "Could not mark this idea tried");
+      }
+    };
+
+    // ── Delete item ───────────────────────────────────────────────────────────
+    window.deleteItem = async function(id) {
+      if (!items.find(i => i.id === id)) return;
+      const confirmed = await hubConfirm({ message: "Remove this idea from the jar?", confirmLabel: "Remove", destructive: true });
+      if (!confirmed) return;
+      try {
+        if (ME) await db("DELETE FROM app_intimacy_jar__jar_items WHERE id = ?", [id]);
+        items = items.filter(i => i.id !== id);
+        render();
+      } catch (e) {
+        hubAlert(e.message ?? "Could not remove this idea");
+      }
+    };
+
+    // ── Views ─────────────────────────────────────────────────────────────────
+    window.showSetup = function() {
+      const myId = ME?.id ?? "demo-1";
+      const otherAdults = members.filter(m => m.role === "adult" && m.id !== myId);
+      const listEl = document.getElementById("setup-members");
+      listEl.innerHTML = otherAdults.map(m => {
+        const color = memberColor(m.id, members);
+        return `<label class="member-option">
+          <input type="radio" name="partner" value="${esc(m.id)}" />
+          <span class="member-avatar" style="background:${color}">${esc(initial(m.name))}</span>
+          <span class="member-name">${esc(m.name)}</span>
+        </label>`;
+      }).join("");
+      if (partner) {
+        const radio = listEl.querySelector(`input[value="${CSS.escape(partner.id)}"]`);
+        if (radio) radio.checked = true;
+      }
+      document.getElementById("view-setup").classList.add("active");
+      document.getElementById("view-main").classList.remove("active");
+    };
+
+    function showMain() {
+      document.getElementById("view-setup").classList.remove("active");
+      document.getElementById("view-main").classList.add("active");
+      render();
+    }
+
+    function starsHtml(rating) {
+      const safeRating = Math.max(0, Math.min(5, Number.isInteger(rating) ? rating : 0));
+      if (!safeRating) return "";
+      return `<span class="stars">${"★".repeat(safeRating)}${"☆".repeat(5 - safeRating)}</span>`;
+    }
+
+    function render() {
+      const untried = [], tried = [];
+      for (const i of items) (i.tried_at ? tried : untried).push(i);
+      tried.sort((a, b) => b.tried_at > a.tried_at ? -1 : 1);
+      const avg     = averageRating(items);
+
+      // Jar count + draw button
+      document.getElementById("jar-count").innerHTML =
+        untried.length === 0
+          ? `The jar is empty — add some ideas!`
+          : `<strong>${untried.length}</strong> idea${untried.length !== 1 ? "s" : ""} in the jar`;
+
+      const drawBtn = document.getElementById("btn-draw");
+      if (drawBtn) drawBtn.disabled = untried.length === 0;
+
+      // Stats
+      const statsEl = document.getElementById("stats-row");
+      if (tried.length) {
+        const avgStr = avg != null ? avg.toFixed(1) + " ★" : "—";
+        statsEl.innerHTML = `
+          <div class="stat"><strong>${tried.length}</strong> tried</div>
+          <div class="stat"><strong>${avgStr}</strong> avg rating</div>`;
+      } else {
+        statsEl.innerHTML = "";
+      }
+
+      // Untried section
+      const untriedEl = document.getElementById("untried-section");
+      if (!untried.length) {
+        untriedEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🫙</div><p>No ideas yet — add something!</p></div>`;
+      } else {
+        const listHtml = untriedVisible
+          ? `<div class="items-list">${untried.map(i => renderCard(i, false)).join("")}</div>`
+          : "";
+        untriedEl.innerHTML = `
+          <button class="section-toggle" onclick="toggleUntried()">
+            ${untriedVisible ? "▾" : "▸"} In the Jar (${untried.length})
+          </button>
+          ${listHtml}`;
+      }
+
+      // Tried section
+      const triedEl = document.getElementById("tried-section");
+      if (!tried.length) {
+        triedEl.innerHTML = "";
+        return;
+      }
+      const triedListHtml = triedVisible
+        ? `<div class="items-list">${tried.map(i => renderCard(i, true)).join("")}</div>`
+        : "";
+      triedEl.innerHTML = `
+        <button class="section-toggle" onclick="toggleTried()">
+          ${triedVisible ? "▾" : "▸"} Tried (${tried.length})
+        </button>
+        ${triedListHtml}`;
+    }
+
+    function renderCard(item, isTried) {
+      const myId = ME?.id ?? "demo-1";
+      const canDelete = item.created_by === myId;
+      const notesHtml = item.notes ? `<div class="item-notes">${esc(item.notes)}</div>` : "";
+      const triedNoteHtml = item.tried_note ? `<div class="item-tried-note">"${esc(item.tried_note)}"</div>` : "";
+      const metaDate = isTried
+        ? `Tried ${formatRelativeDate(item.tried_at)}`
+        : `Added ${formatRelativeDate(item.created_at)}`;
+
+      const actions = isTried
+        ? (canDelete ? `<button class="btn-sm" data-action="delete" data-item-id="${esc(item.id)}">Remove</button>` : "")
+        : `<button class="btn-sm" data-action="rate" data-item-id="${esc(item.id)}">Mark Tried</button>${canDelete ? ` <button class="btn-sm" data-action="delete" data-item-id="${esc(item.id)}">Remove</button>` : ""}`;
+
+      return `
+        <div class="item-card">
+          <div class="item-card-header">
+            <div class="item-card-left">
+              <div class="item-title${isTried ? " tried" : ""}">${esc(item.title)}</div>
+              ${notesHtml}
+              ${triedNoteHtml}
+              <div class="item-meta">
+                <span class="category-badge">${esc(categoryLabel(item.category))}</span>
+                ${isTried && item.rating ? starsHtml(item.rating) : ""}
+                <span>${metaDate}</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:flex-start;flex-shrink:0">
+              ${actions}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    window.toggleUntried = function() { untriedVisible = !untriedVisible; render(); };
+    window.toggleTried   = function() { triedVisible   = !triedVisible;   render(); };
+
+    function handleItemAction(event) {
+      const button = event.target.closest("button[data-action][data-item-id]");
+      if (!button) return;
+      const id = button.dataset.itemId;
+      if (button.dataset.action === "rate") window.openRateModal(id);
+      else if (button.dataset.action === "delete") window.deleteItem(id);
+    }
+    document.getElementById("untried-section").addEventListener("click", handleItemAction);
+    document.getElementById("tried-section").addEventListener("click", handleItemAction);
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    (async () => {
+      await loadMembers();
+      partner = await loadPartner();
+      if (!partner || !partnerReciprocal) {
+        window.showSetup();
+      } else {
+        await loadItems();
+        showMain();
+      }
+    })();
+  </script>
+</body>
+</html>
