@@ -1,14 +1,18 @@
 {
   "id": "intimacy-jar",
   "name": "Intimacy Jar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A shared jar of ideas for couples — add activities and scenarios privately, then draw one at random for spontaneity.",
   "entrypoint": "index.html",
   "runtime": "static",
   "category": "couple",
-  "tags": ["couples"],
+  "tags": [
+    "couples"
+  ],
   "data_access": {
-    "reads": ["family.members"],
+    "reads": [
+      "family.members"
+    ],
     "writes": []
   },
   "permissions": {
@@ -50,7 +54,9 @@
     "jar_items": {
       "kind": "couple_scoped",
       "self_column": "created_by",
-      "participant_columns": ["created_by"],
+      "participant_columns": [
+        "created_by"
+      ],
       "partner_table": "partner_config",
       "partner_member_column": "member_id",
       "partner_id_column": "partner_id",
@@ -60,9 +66,24 @@
       "updates_via_endpoint_only": true,
       "delete_owner_only": true,
       "column_write_acls": {
-        "tried_at": { "writable_by": [], "actions": ["insert"] },
-        "rating": { "writable_by": [], "actions": ["insert"] },
-        "tried_note": { "writable_by": [], "actions": ["insert"] }
+        "tried_at": {
+          "writable_by": [],
+          "actions": [
+            "insert"
+          ]
+        },
+        "rating": {
+          "writable_by": [],
+          "actions": [
+            "insert"
+          ]
+        },
+        "tried_note": {
+          "writable_by": [],
+          "actions": [
+            "insert"
+          ]
+        }
       },
       "insert_max_lengths": {
         "title": 200,
@@ -71,5 +92,8 @@
     }
   },
   "icon": "🫙",
-  "nav": { "label": "Intimacy Jar" }
+  "nav": {
+    "label": "Intimacy Jar"
+  },
+  "kiosk": "never"
 }
