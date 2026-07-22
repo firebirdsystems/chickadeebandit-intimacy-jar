@@ -1,5 +1,6 @@
 {
   "id": "intimacy-jar",
+  "contexts": ["household", "shared_space"],
   "name": "Intimacy Jar",
   "version": "1.0.1",
   "description": "A shared jar of ideas for couples — add activities and scenarios privately, then draw one at random for spontaneity.",
