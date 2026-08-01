@@ -28,3 +28,12 @@ export function averageRating(items) {
   if (!rated.length) return null;
   return rated.reduce((sum, i) => sum + i.rating, 0) / rated.length;
 }
+
+/**
+ * Fields the in-app search matches against (see hub-sdk `searchMatch`).
+ * Notes and category count as well as the title, and the note left
+ * after trying something is searchable too.
+ */
+export function searchableFields(item) {
+  return [item.title, item.notes, item.category, item.tried_note];
+}

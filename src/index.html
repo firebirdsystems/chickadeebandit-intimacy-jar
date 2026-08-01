@@ -203,6 +203,13 @@
     .star-picker .star { color: var(--hub-border, #e5e7eb); transition: color .1s; }
     .star-picker .star.selected { color: #f59e0b; }
     .star-picker .star:hover { color: #f59e0b; }
+    .search-row { margin-bottom: 12px; }
+    .search-input {
+      width: 100%; border: 1.5px solid var(--border-mid, var(--border, #d1d5db));
+      border-radius: 8px; padding: 9px 11px; font: inherit;
+      background: var(--surface, var(--card, #fff)); color: var(--text, inherit);
+    }
+    .search-input:focus { outline: none; border-color: var(--accent, #6366f1); }
   </style>
 </head>
 <body>
@@ -243,14 +250,17 @@
     <div id="stats-row" class="stats-row"></div>
 
     <div class="content">
+      <div class="search-row" id="search-row" style="display:none">
+        <input id="search" class="search-input" type="search" placeholder="Search the jar…" aria-label="Search the jar" />
+      </div>
       <div id="untried-section"></div>
       <div id="tried-section"></div>
     </div>
   </div>
 
   <script type="module">
-    import { hubAlert, esc, initial, memberColor, formatRelativeDate, hubConfirm } from "/hub-sdk.js";
-    import { CATEGORIES, validateItem, categoryLabel, randomUntried, averageRating } from "./logic.js";
+    import { hubAlert, esc, initial, memberColor, formatRelativeDate, hubConfirm, searchMatch } from "/hub-sdk.js";
+    import { CATEGORIES, validateItem, categoryLabel, randomUntried, averageRating, searchableFields } from "./logic.js";
 
     const CONTEXT = window.__CONTEXT_URL    ?? "";
     const DB      = window.__DB_URL         ?? "";
@@ -261,6 +271,7 @@
     let partner          = null;
     let partnerReciprocal = false;
     let items            = [];
+let searchQ = "";       // in-app search (see logic.js searchableFields)
     let modalEl          = null;
     let drawnItem        = null;
     let triedVisible     = false;
@@ -590,9 +601,21 @@
       return `<span class="stars">${"★".repeat(safeRating)}${"☆".repeat(5 - safeRating)}</span>`;
     }
 
+    // Only the lists are redrawn, so the search box keeps focus.
+    document.addEventListener("input", (e) => {
+      if (e.target.id !== "search") return;
+      searchQ = e.target.value;
+      render();
+    });
+
     function render() {
+      // Only worth offering the box once there is a jar to search.
+      const searchRow = document.getElementById("search-row");
+      if (searchRow) searchRow.style.display = items.length ? "" : "none";
+      const matched = searchQ ? items.filter(i => searchMatch(searchQ, searchableFields(i))) : items;
+
       const untried = [], tried = [];
-      for (const i of items) (i.tried_at ? tried : untried).push(i);
+      for (const i of matched) (i.tried_at ? tried : untried).push(i);
       tried.sort((a, b) => b.tried_at > a.tried_at ? -1 : 1);
       const avg     = averageRating(items);
 
@@ -619,7 +642,9 @@
       // Untried section
       const untriedEl = document.getElementById("untried-section");
       if (!untried.length) {
-        untriedEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🫙</div><p>No ideas yet — add something!</p></div>`;
+        untriedEl.innerHTML = searchQ
+          ? `<div class="empty-state"><div class="empty-icon">🔍</div><p>Nothing in the jar matches "${esc(searchQ)}".</p></div>`
+          : `<div class="empty-state"><div class="empty-icon">🫙</div><p>No ideas yet — add something!</p></div>`;
       } else {
         const listHtml = untriedVisible
           ? `<div class="items-list">${untried.map(i => renderCard(i, false)).join("")}</div>`

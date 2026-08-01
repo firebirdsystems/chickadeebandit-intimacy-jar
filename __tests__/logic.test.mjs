@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateItem, categoryLabel, randomUntried, averageRating } from "../src/logic.js";
+import { validateItem, categoryLabel, randomUntried, averageRating, searchableFields } from "../src/logic.js";
 
 describe("validateItem", () => {
   it("rejects empty/whitespace/over-long titles", () => {
@@ -54,5 +54,13 @@ describe("averageRating", () => {
       { rating: 1 },
     ];
     expect(averageRating(items)).toBe(3.5);
+  });
+});
+
+describe("searchableFields", () => {
+  it("matches on notes and category, not just the title", () => {
+    const fields = searchableFields({ title: "Picnic", notes: "the hilltop one", category: "outdoors", tried_note: "" });
+    expect(fields).toContain("the hilltop one");
+    expect(fields).toContain("outdoors");
   });
 });
