@@ -45,6 +45,13 @@
     "min_rating": 1,
     "max_rating": 5
   },
+  "member_references": {
+    "partner_config": [
+      { "column": "member_id", "on_removed": "delete", "id_column": "rowid" },
+      { "column": "partner_id", "on_removed": "delete", "id_column": "rowid" }
+    ],
+    "jar_items": { "column": "created_by", "on_removed": "keep" }
+  },
   "row_policies": {
     "partner_config": {
       "kind": "owner_only",
