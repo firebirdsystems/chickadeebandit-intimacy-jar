@@ -215,7 +215,7 @@
 <body>
 
   <!-- ── Setup view ── -->
-  <div id="view-setup" class="view">
+  <div id="view-setup" class="view" data-testid="view-setup">
     <div class="setup-wrap">
       <div class="setup-card">
         <div class="setup-icon">🫙</div>
@@ -229,7 +229,7 @@
   </div>
 
   <!-- ── Main view ── -->
-  <div id="view-main" class="view">
+  <div id="view-main" class="view" data-testid="view-main">
     <div class="app-header">
       <div class="app-header-left">
         <span class="icon">🫙</span>
@@ -243,11 +243,11 @@
 
     <div class="jar-hero">
       <div class="jar-emoji">🫙</div>
-      <div id="jar-count" class="jar-count"></div>
+      <div id="jar-count" class="jar-count" data-testid="jar-count"></div>
       <button id="btn-draw" class="btn-draw" onclick="drawFromJar()">✨ Draw from Jar</button>
     </div>
 
-    <div id="stats-row" class="stats-row"></div>
+    <div id="stats-row" class="stats-row" data-testid="stats-row"></div>
 
     <div class="content">
       <div class="search-row" id="search-row" style="display:none">
@@ -682,11 +682,11 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         : `Added ${formatRelativeDate(item.created_at)}`;
 
       const actions = isTried
-        ? (canDelete ? `<button class="btn-sm" data-action="delete" data-item-id="${esc(item.id)}">Remove</button>` : "")
-        : `<button class="btn-sm" data-action="rate" data-item-id="${esc(item.id)}">Mark Tried</button>${canDelete ? ` <button class="btn-sm" data-action="delete" data-item-id="${esc(item.id)}">Remove</button>` : ""}`;
+        ? (canDelete ? `<button class="btn-sm" data-action="delete" data-testid="delete-item" data-item-id="${esc(item.id)}">Remove</button>` : "")
+        : `<button class="btn-sm" data-action="rate" data-testid="mark-tried" data-item-id="${esc(item.id)}">Mark Tried</button>${canDelete ? ` <button class="btn-sm" data-action="delete" data-testid="delete-item" data-item-id="${esc(item.id)}">Remove</button>` : ""}`;
 
       return `
-        <div class="item-card">
+        <div class="item-card" data-testid="item-card" data-item-id="${esc(item.id)}" data-mine="${canDelete ? "yes" : "no"}">
           <div class="item-card-header">
             <div class="item-card-left">
               <div class="item-title${isTried ? " tried" : ""}">${esc(item.title)}</div>

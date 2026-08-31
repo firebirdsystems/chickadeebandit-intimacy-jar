@@ -1,0 +1,157 @@
+{
+  "scenarios": [
+    {
+      "name": "a one-sided pairing does not open the jar",
+      "members": {
+        "a": "adult",
+        "b": "adult"
+      },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+          "params": [
+            "{{a}}",
+            "{{b}}",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "open",
+          "as": "a"
+        },
+        {
+          "action": "expectVisible",
+          "selector": "[data-testid=\"view-setup\"]",
+          "as": "a"
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+          "params": [
+            "{{b}}",
+            "{{a}}",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "reload",
+          "as": "a"
+        },
+        {
+          "action": "expectVisible",
+          "selector": "[data-testid=\"view-main\"]",
+          "as": "a"
+        }
+      ]
+    },
+    {
+      "name": "both partners' ideas render, but Remove is offered only on your own",
+      "members": {
+        "a": "adult",
+        "b": "adult"
+      },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+          "params": [
+            "{{a}}",
+            "{{b}}",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+          "params": [
+            "{{b}}",
+            "{{a}}",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, tried_at, rating, created_at, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          "params": [
+            "j1",
+            "{{a}}",
+            "Partner A idea",
+            "romantic",
+            null,
+            null,
+            "2026-01-01T00:00:00Z",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, tried_at, rating, created_at, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          "params": [
+            "j2",
+            "{{b}}",
+            "Member B idea",
+            "playful",
+            null,
+            null,
+            "2026-01-02T00:00:00Z",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, tried_at, rating, created_at, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          "params": [
+            "j3",
+            "{{a}}",
+            "An idea we tried",
+            "intimate",
+            "2026-01-03T00:00:00Z",
+            4,
+            "2026-01-01T00:00:00Z",
+            "sess-ab"
+          ]
+        },
+        {
+          "action": "open",
+          "as": "b"
+        },
+        {
+          "action": "expectVisible",
+          "selector": "[data-testid=\"view-main\"]",
+          "as": "b"
+        },
+        {
+          "action": "expectText",
+          "selector": "[data-testid=\"item-card\"][data-item-id=\"j1\"]",
+          "text": "Partner A idea",
+          "as": "b"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"item-card\"][data-item-id=\"j1\"] [data-testid=\"delete-item\"]",
+          "count": 0,
+          "as": "b"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"item-card\"][data-item-id=\"j2\"] [data-testid=\"delete-item\"]",
+          "count": 1,
+          "as": "b"
+        },
+        {
+          "action": "expectText",
+          "selector": "[data-testid=\"jar-count\"]",
+          "text": "2 ideas in the jar",
+          "as": "b"
+        },
+        {
+          "action": "expectText",
+          "selector": "[data-testid=\"stats-row\"]",
+          "text": "4.0 ★",
+          "as": "b"
+        }
+      ]
+    }
+  ]
+}
