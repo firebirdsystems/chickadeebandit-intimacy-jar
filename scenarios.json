@@ -1,0 +1,120 @@
+{
+  "scenarios": [
+    {
+      "name": "jar items are shared only between reciprocal partners; an outsider sees nothing",
+      "members": { "a": "adult", "b": "adult", "outsider": "adult" },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?), (?, ?, ?)",
+          "params": ["{{a}}", "{{b}}", "sess-ab", "{{b}}", "{{a}}", "sess-ab"]
+        },
+        {
+          "action": "db",
+          "as": "a",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, created_at, session_id) VALUES (?, ?, ?, ?, ?, ?)",
+          "params": ["j1", "{{a}}", "Candlelit dinner", "romantic", "2026-01-01T00:00:00Z", "sess-ab"],
+          "expect": { "status": 200 }
+        },
+        {
+          "action": "db",
+          "as": "b",
+          "sql": "SELECT id, title FROM app_intimacy_jar__jar_items",
+          "expect": { "status": 200, "rowCount": 1, "rowsContain": [{ "id": "j1", "title": "Candlelit dinner" }] }
+        },
+        {
+          "action": "db",
+          "as": "a",
+          "sql": "SELECT id FROM app_intimacy_jar__jar_items",
+          "expect": { "status": 200, "rowCount": 1 }
+        },
+        {
+          "action": "db",
+          "as": "outsider",
+          "sql": "SELECT id FROM app_intimacy_jar__jar_items",
+          "expect": { "status": 200, "rowCount": 0 }
+        }
+      ]
+    },
+    {
+      "name": "a one-sided pairing is not a couple: the non-reciprocated member sees none of the partner's items",
+      "members": { "a": "adult", "stalker": "adult" },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+          "params": ["{{stalker}}", "{{a}}", "sess-x"]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, created_at, session_id) VALUES ('j-a', ?, 'Private idea', 'intimate', '2026-01-01T00:00:00Z', 'sess-x')",
+          "params": ["{{a}}"]
+        },
+        {
+          "action": "db",
+          "as": "stalker",
+          "sql": "SELECT id FROM app_intimacy_jar__jar_items",
+          "expect": { "status": 200, "rowCount": 0 }
+        },
+        {
+          "action": "db",
+          "as": "a",
+          "sql": "SELECT id FROM app_intimacy_jar__jar_items",
+          "expect": { "status": 200, "rowCount": 1, "rowsContain": [{ "id": "j-a" }] }
+        }
+      ]
+    },
+    {
+      "name": "only the author removes an item, edits go through the endpoint, and tried-state cannot be set at insert",
+      "members": { "a": "adult", "b": "adult" },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?), (?, ?, ?)",
+          "params": ["{{a}}", "{{b}}", "sess-ab", "{{b}}", "{{a}}", "sess-ab"]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, created_at, session_id) VALUES ('j1', ?, 'Stargazing', 'romantic', '2026-01-01T00:00:00Z', 'sess-ab')",
+          "params": ["{{a}}"]
+        },
+        {
+          "action": "db",
+          "as": "b",
+          "sql": "DELETE FROM app_intimacy_jar__jar_items WHERE id = 'j1'"
+        },
+        {
+          "action": "db",
+          "as": "b",
+          "sql": "SELECT id FROM app_intimacy_jar__jar_items WHERE id = 'j1'",
+          "expect": { "status": 200, "rowCount": 1 }
+        },
+        {
+          "action": "db",
+          "as": "b",
+          "sql": "UPDATE app_intimacy_jar__jar_items SET title = 'Hijacked' WHERE id = 'j1'",
+          "expect": { "status": 403, "errorIncludes": "endpoint" }
+        },
+        {
+          "action": "db",
+          "as": "b",
+          "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, title, category, tried_at, rating, created_at, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          "params": ["j2", "{{b}}", "Road trip", "adventurous", "2026-01-02T00:00:00Z", 5, "2026-01-02T00:00:00Z", "sess-ab"],
+          "expect": { "status": 403, "errorIncludes": "tried_at" }
+        },
+        {
+          "action": "db",
+          "as": "a",
+          "sql": "DELETE FROM app_intimacy_jar__jar_items WHERE id = 'j1'",
+          "expect": { "status": 200 }
+        },
+        {
+          "action": "db",
+          "as": "b",
+          "sql": "SELECT id FROM app_intimacy_jar__jar_items",
+          "expect": { "status": 200, "rowCount": 0 }
+        }
+      ]
+    }
+  ]
+}
