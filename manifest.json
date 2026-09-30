@@ -21,6 +21,9 @@
     "requires_approval": false
   },
   "storage": "db",
+  "preload": {
+    "items": { "sql": "SELECT * FROM app_intimacy_jar__jar_items ORDER BY created_at DESC" }
+  },
   "partner_link": {
     "table": "partner_config",
     "member_column": "member_id",
