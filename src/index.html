@@ -122,7 +122,7 @@
 
     /* ── Empty state ── */
     .empty-state { text-align: center; padding: 32px 20px; color: var(--hub-text-muted, #6b7280); }
-    .empty-state .empty-icon { font-size: 2rem; margin-bottom: 10px; }
+    .empty-state .empty-icon { margin-bottom: 10px; }
     .empty-state p { font-size: 0.9rem; }
 
     /* ── Buttons ── */
@@ -218,7 +218,7 @@
   <div id="view-setup" class="view" data-testid="view-setup">
     <div class="setup-wrap">
       <div class="setup-card">
-        <div class="setup-icon">🫙</div>
+        <div class="setup-icon" id="setup-icon"></div>
         <h2>Intimacy Jar</h2>
         <p class="setup-desc">A shared jar of ideas for just the two of you. Add activities privately, then draw one at random.</p>
         <span class="pick-label">Who is your partner?</span>
@@ -232,19 +232,19 @@
   <div id="view-main" class="view" data-testid="view-main">
     <div class="app-header">
       <div class="app-header-left">
-        <span class="icon">🫙</span>
+        <span class="icon" id="header-glyph"></span>
         <h1>Intimacy Jar</h1>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button class="btn-icon" title="Change partner" onclick="showSetup()">⚙️</button>
+        <button class="btn-icon" title="Change partner" aria-label="Change partner" onclick="showSetup()" id="change-partner-btn"></button>
         <button class="btn-primary" onclick="openAddItem()">+ Add</button>
       </div>
     </div>
 
     <div class="jar-hero">
-      <div class="jar-emoji">🫙</div>
+      <div class="jar-emoji" id="jar-glyph"></div>
       <div id="jar-count" class="jar-count" data-testid="jar-count"></div>
-      <button id="btn-draw" class="btn-draw" onclick="drawFromJar()">✨ Draw from Jar</button>
+      <button id="btn-draw" class="btn-draw" onclick="drawFromJar()"><span id="draw-glyph"></span> Draw from Jar</button>
     </div>
 
     <div id="stats-row" class="stats-row" data-testid="stats-row"></div>
@@ -259,8 +259,15 @@
   </div>
 
   <script type="module">
-    import { hubAlert, esc, initial, memberColor, formatRelativeDate, hubConfirm, searchMatch } from "/hub-sdk.js";
+    import { hubAlert, esc, initial, memberColor, formatRelativeDate, hubConfirm, searchMatch, glyph, chickadee } from "/hub-sdk.js";
     import { CATEGORIES, validateItem, categoryLabel, randomUntried, averageRating, searchableFields } from "./logic.js";
+
+    // Static markup cannot call the SDK, so its marks are drawn here.
+    document.getElementById("setup-icon").innerHTML = chickadee("pair", { size: 80 });
+    document.getElementById("header-glyph").innerHTML = glyph("jar");
+    document.getElementById("change-partner-btn").innerHTML = glyph("gear");
+    document.getElementById("jar-glyph").innerHTML = glyph("jar");
+    document.getElementById("draw-glyph").innerHTML = glyph("sparkles", { accent: "currentColor" });
 
     const CONTEXT = window.__CONTEXT_URL    ?? "";
     const DB      = window.__DB_URL         ?? "";
@@ -478,16 +485,16 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
 
     function showDrawModal(item) {
       openModal(`
-        <h3>🎲 You Drew…</h3>
+        <h3>${glyph("dice")} You Drew…</h3>
         <div class="draw-item-display">
           <div class="draw-category">${esc(categoryLabel(item.category))}</div>
           <div class="draw-title">${esc(item.title)}</div>
           ${item.notes ? `<div class="draw-notes">${esc(item.notes)}</div>` : ""}
         </div>
         <div class="draw-actions">
-          <button class="btn-primary" onclick="openRateModal()">✓ We did it!</button>
+          <button class="btn-primary" onclick="openRateModal()">${glyph("tick", { accent: "currentColor" })} We did it!</button>
           <div class="draw-actions-row">
-            <button class="btn-secondary" onclick="drawAgain()">🎲 Draw Again</button>
+            <button class="btn-secondary" onclick="drawAgain()">${glyph("dice")} Draw Again</button>
             <button class="btn-secondary" onclick="closeModal()">Put Back</button>
           </div>
         </div>
@@ -509,7 +516,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
       if (!drawnItem) return;
       selectedRating = 0;
       openModal(`
-        <h3>How was it? 🎉</h3>
+        <h3>How was it? ${glyph("party")}</h3>
         <p style="color:var(--hub-text-muted,#6b7280);margin-bottom:16px;font-size:.9rem">${esc(drawnItem.title)}</p>
         <div class="form-group">
           <label>Rating <span style="color:var(--hub-text-muted,#6b7280);font-weight:400">(optional)</span></label>
@@ -646,8 +653,8 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
       const untriedEl = document.getElementById("untried-section");
       if (!untried.length) {
         untriedEl.innerHTML = searchQ
-          ? `<div class="empty-state"><div class="empty-icon">🔍</div><p>Nothing in the jar matches "${esc(searchQ)}".</p></div>`
-          : `<div class="empty-state"><div class="empty-icon">🫙</div><p>No ideas yet — add something!</p></div>`;
+          ? `<div class="empty-state"><div class="empty-icon">${chickadee("searching")}</div><p>Nothing in the jar matches "${esc(searchQ)}".</p></div>`
+          : `<div class="empty-state"><div class="empty-icon">${chickadee("nest")}</div><p>No ideas yet — add something!</p></div>`;
       } else {
         const listHtml = untriedVisible
           ? `<div class="items-list">${untried.map(i => renderCard(i, false)).join("")}</div>`
