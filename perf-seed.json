@@ -1,0 +1,756 @@
+{
+  "seed": [
+    {
+      "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+      "params": [
+        "{{me}}",
+        "{{partner}}",
+        "perf-jar-session"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__partner_config (member_id, partner_id, session_id) VALUES (?, ?, ?)",
+      "params": [
+        "{{partner}}",
+        "{{me}}",
+        "perf-jar-session"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-166 days'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-161 days'), ?, ?)",
+      "params": [
+        "perf-jar-000",
+        "{{me}}",
+        "perf-jar-session",
+        "Candlelit dinner at home",
+        "romantic",
+        "No phones",
+        5,
+        "Absolutely perfect evening."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-163 days','-5 hours','-7 minutes'), ?)",
+      "params": [
+        "perf-jar-001",
+        "{{partner}}",
+        "perf-jar-session",
+        "Board game tournament",
+        "playful",
+        "Pack coffee"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-161 days','-10 hours','-14 minutes'), ?)",
+      "params": [
+        "perf-jar-002",
+        "{{me}}",
+        "perf-jar-session",
+        "Watch a sunrise together",
+        "adventurous",
+        "Book a sitter first"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-158 days','-15 hours','-21 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-120 days','-3 hours'), ?, ?)",
+      "params": [
+        "perf-jar-003",
+        "{{partner}}",
+        "perf-jar-session",
+        "Give each other massages",
+        "intimate",
+        "Best on a weeknight",
+        3,
+        "We laughed the whole time."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-156 days','-20 hours','-28 minutes'), ?)",
+      "params": [
+        "perf-jar-004",
+        "{{partner}}",
+        "perf-jar-session",
+        "Volunteer together for an afternoon",
+        "other",
+        "Bring the good blanket"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-153 days','-2 hours','-35 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-93 days','-5 hours'), ?)",
+      "params": [
+        "perf-jar-005",
+        "{{me}}",
+        "perf-jar-session",
+        "Slow dance in the living room",
+        "romantic",
+        "Needs a free Saturday",
+        5
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-150 days','-7 hours','-42 minutes'), ?)",
+      "params": [
+        "perf-jar-006",
+        "{{partner}}",
+        "perf-jar-session",
+        "Blind taste test",
+        "playful",
+        "Keep it a surprise"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-148 days','-12 hours','-49 minutes'))",
+      "params": [
+        "perf-jar-007",
+        "{{me}}",
+        "perf-jar-session",
+        "Day trip with no plan",
+        "adventurous"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-145 days','-17 hours','-56 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','-8 hours'), ?, ?)",
+      "params": [
+        "perf-jar-008",
+        "{{me}}",
+        "perf-jar-session",
+        "Long bath, no phones",
+        "intimate",
+        4,
+        "Fun, but next time bring snacks."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-143 days','-22 hours','-4 minutes'), ?)",
+      "params": [
+        "perf-jar-009",
+        "{{partner}}",
+        "perf-jar-session",
+        "Plant something in the garden",
+        "other",
+        "No phones"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-140 days','-4 hours','-11 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-25 days','-10 hours'), ?, ?)",
+      "params": [
+        "perf-jar-010",
+        "{{me}}",
+        "perf-jar-session",
+        "Write each other a letter",
+        "romantic",
+        "Pack coffee",
+        3,
+        "A little cold out, still worth it."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-137 days','-9 hours','-18 minutes'), ?)",
+      "params": [
+        "perf-jar-011",
+        "{{partner}}",
+        "perf-jar-session",
+        "Karaoke at home",
+        "playful",
+        "Book a sitter first"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-135 days','-14 hours','-25 minutes'), ?)",
+      "params": [
+        "perf-jar-012",
+        "{{partner}}",
+        "perf-jar-session",
+        "Try a cuisine neither of us has had",
+        "adventurous",
+        "Best on a weeknight"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-132 days','-19 hours','-32 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-111 days','-13 hours'), ?, ?)",
+      "params": [
+        "perf-jar-013",
+        "{{me}}",
+        "perf-jar-session",
+        "Phone-free evening",
+        "intimate",
+        "Bring the good blanket",
+        2,
+        "Better than expected, do it again in the fall."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','-1 hours','-39 minutes'), ?)",
+      "params": [
+        "perf-jar-014",
+        "{{partner}}",
+        "perf-jar-session",
+        "Start a puzzle and finish it",
+        "other",
+        "Needs a free Saturday"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-127 days','-6 hours','-46 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-79 days','-15 hours'), ?, ?)",
+      "params": [
+        "perf-jar-015",
+        "{{me}}",
+        "perf-jar-session",
+        "Recreate our first date",
+        "romantic",
+        "Keep it a surprise",
+        4,
+        "We laughed the whole time."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','-11 hours','-53 minutes'))",
+      "params": [
+        "perf-jar-016",
+        "{{me}}",
+        "perf-jar-session",
+        "Build a blanket fort",
+        "playful"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-122 days','-16 hours','-1 minutes'))",
+      "params": [
+        "perf-jar-017",
+        "{{partner}}",
+        "perf-jar-session",
+        "Hike to the lookout",
+        "adventurous"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-119 days','-21 hours','-8 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-30 days','-18 hours'), ?, ?)",
+      "params": [
+        "perf-jar-018",
+        "{{me}}",
+        "perf-jar-session",
+        "Ask each other the thirty-six questions",
+        "intimate",
+        "No phones",
+        4,
+        "Absolutely perfect evening."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-117 days','-3 hours','-15 minutes'), ?)",
+      "params": [
+        "perf-jar-019",
+        "{{partner}}",
+        "perf-jar-session",
+        "Museum on a weekday",
+        "other",
+        "Pack coffee"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-114 days','-8 hours','-22 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-107 days'), ?, ?)",
+      "params": [
+        "perf-jar-020",
+        "{{partner}}",
+        "perf-jar-session",
+        "Breakfast in bed",
+        "romantic",
+        "Book a sitter first",
+        2,
+        "Fun, but next time bring snacks."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-111 days','-13 hours','-29 minutes'), ?)",
+      "params": [
+        "perf-jar-021",
+        "{{me}}",
+        "perf-jar-session",
+        "Mini golf",
+        "playful",
+        "Best on a weeknight"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-109 days','-18 hours','-36 minutes'), ?)",
+      "params": [
+        "perf-jar-022",
+        "{{partner}}",
+        "perf-jar-session",
+        "Kayaking on the lake",
+        "adventurous",
+        "Bring the good blanket"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','-43 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-50 days','-3 hours'), ?)",
+      "params": [
+        "perf-jar-023",
+        "{{me}}",
+        "perf-jar-session",
+        "Share one thing we have never told each other",
+        "intimate",
+        "Needs a free Saturday",
+        5
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-104 days','-5 hours','-50 minutes'), ?)",
+      "params": [
+        "perf-jar-024",
+        "{{me}}",
+        "perf-jar-session",
+        "Take a pottery class",
+        "other",
+        "Keep it a surprise"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-101 days','-10 hours','-57 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-13 days','-5 hours'), ?, ?)",
+      "params": [
+        "perf-jar-025",
+        "{{partner}}",
+        "perf-jar-session",
+        "Sunset walk by the river",
+        "romantic",
+        4,
+        "Better than expected, do it again in the fall."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-98 days','-15 hours','-5 minutes'))",
+      "params": [
+        "perf-jar-026",
+        "{{me}}",
+        "perf-jar-session",
+        "Bake-off, loser does the dishes",
+        "playful"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-96 days','-20 hours','-12 minutes'), ?)",
+      "params": [
+        "perf-jar-027",
+        "{{partner}}",
+        "perf-jar-session",
+        "Camp in the backyard",
+        "adventurous",
+        "No phones"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-93 days','-2 hours','-19 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-44 days','-8 hours'), ?, ?)",
+      "params": [
+        "perf-jar-028",
+        "{{partner}}",
+        "perf-jar-session",
+        "Slow morning with nowhere to be",
+        "intimate",
+        "Pack coffee",
+        5,
+        "A little cold out, still worth it."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-91 days','-7 hours','-26 minutes'), ?)",
+      "params": [
+        "perf-jar-029",
+        "{{me}}",
+        "perf-jar-session",
+        "Rearrange the living room",
+        "other",
+        "Book a sitter first"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','-12 hours','-33 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','-10 hours'), ?, ?)",
+      "params": [
+        "perf-jar-030",
+        "{{partner}}",
+        "perf-jar-session",
+        "Picnic in the park",
+        "romantic",
+        "Best on a weeknight",
+        5,
+        "Absolutely perfect evening."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-85 days','-17 hours','-40 minutes'), ?)",
+      "params": [
+        "perf-jar-031",
+        "{{me}}",
+        "perf-jar-session",
+        "Trivia night for two",
+        "playful",
+        "Bring the good blanket"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-83 days','-22 hours','-47 minutes'), ?)",
+      "params": [
+        "perf-jar-032",
+        "{{me}}",
+        "perf-jar-session",
+        "Take the scenic train",
+        "adventurous",
+        "Needs a free Saturday"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-80 days','-4 hours','-54 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-12 days','-13 hours'), ?, ?)",
+      "params": [
+        "perf-jar-033",
+        "{{partner}}",
+        "perf-jar-session",
+        "Fall asleep talking",
+        "intimate",
+        "Keep it a surprise",
+        5,
+        "We laughed the whole time."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-78 days','-9 hours','-2 minutes'))",
+      "params": [
+        "perf-jar-034",
+        "{{me}}",
+        "perf-jar-session",
+        "Watch each other's favorite childhood film",
+        "other"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, tried_at, rating) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-75 days','-14 hours','-9 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-35 days','-15 hours'), ?)",
+      "params": [
+        "perf-jar-035",
+        "{{partner}}",
+        "perf-jar-session",
+        "Stargazing from the backyard",
+        "romantic",
+        5
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-72 days','-19 hours','-16 minutes'), ?)",
+      "params": [
+        "perf-jar-036",
+        "{{partner}}",
+        "perf-jar-session",
+        "Thrift store outfit challenge",
+        "playful",
+        "No phones"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','-1 hours','-23 minutes'), ?)",
+      "params": [
+        "perf-jar-037",
+        "{{me}}",
+        "perf-jar-session",
+        "Rock climbing gym",
+        "adventurous",
+        "Pack coffee"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-67 days','-6 hours','-30 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','-18 hours'), ?, ?)",
+      "params": [
+        "perf-jar-038",
+        "{{partner}}",
+        "perf-jar-session",
+        "Plan our dream year together",
+        "intimate",
+        "Book a sitter first",
+        3,
+        "Fun, but next time bring snacks."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-65 days','-11 hours','-37 minutes'), ?)",
+      "params": [
+        "perf-jar-039",
+        "{{me}}",
+        "perf-jar-session",
+        "Visit the bookstore, pick a book for each other",
+        "other",
+        "Best on a weeknight"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-62 days','-16 hours','-44 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days'), ?, ?)",
+      "params": [
+        "perf-jar-040",
+        "{{me}}",
+        "perf-jar-session",
+        "Cook a new recipe together",
+        "romantic",
+        "Bring the good blanket",
+        5,
+        "A little cold out, still worth it."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-59 days','-21 hours','-51 minutes'), ?)",
+      "params": [
+        "perf-jar-041",
+        "{{partner}}",
+        "perf-jar-session",
+        "Water balloon fight",
+        "playful",
+        "Needs a free Saturday"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-57 days','-3 hours','-58 minutes'), ?)",
+      "params": [
+        "perf-jar-042",
+        "{{me}}",
+        "perf-jar-session",
+        "Weekend in a town we have never visited",
+        "adventurous",
+        "Keep it a surprise"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-54 days','-8 hours','-6 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-17 days','-3 hours'), ?, ?)",
+      "params": [
+        "perf-jar-043",
+        "{{partner}}",
+        "perf-jar-session",
+        "Hold hands for a whole walk",
+        "intimate",
+        4,
+        "Better than expected, do it again in the fall."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','-13 hours','-13 minutes'))",
+      "params": [
+        "perf-jar-044",
+        "{{partner}}",
+        "perf-jar-session",
+        "Make a photo book of last year",
+        "other"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-49 days','-18 hours','-20 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-33 days','-5 hours'), ?, ?)",
+      "params": [
+        "perf-jar-045",
+        "{{me}}",
+        "perf-jar-session",
+        "Look through old photos",
+        "romantic",
+        "No phones",
+        3,
+        "We laughed the whole time."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','-27 minutes'), ?)",
+      "params": [
+        "perf-jar-046",
+        "{{partner}}",
+        "perf-jar-session",
+        "Learn a card trick each",
+        "playful",
+        "Pack coffee"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-44 days','-5 hours','-34 minutes'), ?)",
+      "params": [
+        "perf-jar-047",
+        "{{me}}",
+        "perf-jar-session",
+        "Farmers market, then cook what we find",
+        "adventurous",
+        "Book a sitter first"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-41 days','-10 hours','-41 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-12 days','-8 hours'), ?, ?)",
+      "params": [
+        "perf-jar-048",
+        "{{me}}",
+        "perf-jar-session",
+        "Tell the story of how we met to each other",
+        "intimate",
+        "Best on a weeknight",
+        2,
+        "Absolutely perfect evening."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-39 days','-15 hours','-48 minutes'), ?)",
+      "params": [
+        "perf-jar-049",
+        "{{partner}}",
+        "perf-jar-session",
+        "Write down ten goals for the two of us",
+        "other",
+        "Bring the good blanket"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-36 days','-20 hours','-55 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','-10 hours'), ?, ?)",
+      "params": [
+        "perf-jar-050",
+        "{{me}}",
+        "perf-jar-session",
+        "A night at the place we got engaged",
+        "romantic",
+        "Needs a free Saturday",
+        4,
+        "Fun, but next time bring snacks."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-33 days','-2 hours','-3 minutes'), ?)",
+      "params": [
+        "perf-jar-051",
+        "{{partner}}",
+        "perf-jar-session",
+        "Arcade night",
+        "playful",
+        "Keep it a surprise"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-31 days','-7 hours','-10 minutes'))",
+      "params": [
+        "perf-jar-052",
+        "{{partner}}",
+        "perf-jar-session",
+        "Bike to the next town for lunch",
+        "adventurous"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, tried_at, rating) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','-12 hours','-17 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-15 days','-13 hours'), ?)",
+      "params": [
+        "perf-jar-053",
+        "{{me}}",
+        "perf-jar-session",
+        "An evening by the fire",
+        "intimate",
+        4
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-26 days','-17 hours','-24 minutes'), ?)",
+      "params": [
+        "perf-jar-054",
+        "{{partner}}",
+        "perf-jar-session",
+        "Read aloud to each other",
+        "romantic",
+        "No phones"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-23 days','-22 hours','-31 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-7 days','-15 hours'), ?, ?)",
+      "params": [
+        "perf-jar-055",
+        "{{me}}",
+        "perf-jar-session",
+        "Paint portraits of each other",
+        "playful",
+        "Pack coffee",
+        2,
+        "Better than expected, do it again in the fall."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-20 days','-4 hours','-38 minutes'), ?)",
+      "params": [
+        "perf-jar-056",
+        "{{me}}",
+        "perf-jar-session",
+        "Cold swim, hot chocolate after",
+        "adventurous",
+        "Book a sitter first"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-18 days','-9 hours','-45 minutes'), ?)",
+      "params": [
+        "perf-jar-057",
+        "{{partner}}",
+        "perf-jar-session",
+        "Make a playlist for each other",
+        "intimate",
+        "Best on a weeknight"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-15 days','-14 hours','-52 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','-18 hours'), ?, ?)",
+      "params": [
+        "perf-jar-058",
+        "{{me}}",
+        "perf-jar-session",
+        "Flowers for no reason",
+        "romantic",
+        "Bring the good blanket",
+        5,
+        "A little cold out, still worth it."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-13 days','-19 hours'), ?)",
+      "params": [
+        "perf-jar-059",
+        "{{partner}}",
+        "perf-jar-session",
+        "Dance class for beginners",
+        "playful",
+        "Needs a free Saturday"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes, tried_at, rating, tried_note) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','-1 hours','-7 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-5 days'), ?, ?)",
+      "params": [
+        "perf-jar-060",
+        "{{partner}}",
+        "perf-jar-session",
+        "Night at an observatory",
+        "adventurous",
+        "Keep it a surprise",
+        4,
+        "Absolutely perfect evening."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-7 days','-6 hours','-14 minutes'))",
+      "params": [
+        "perf-jar-061",
+        "{{me}}",
+        "perf-jar-session",
+        "Early night in",
+        "intimate"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-5 days','-11 hours','-21 minutes'))",
+      "params": [
+        "perf-jar-062",
+        "{{partner}}",
+        "perf-jar-session",
+        "Handwritten notes in a coat pocket",
+        "romantic"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_intimacy_jar__jar_items (id, created_by, session_id, title, category, created_at, notes) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','-16 hours','-28 minutes'), ?)",
+      "params": [
+        "perf-jar-063",
+        "{{me}}",
+        "perf-jar-session",
+        "Scavenger hunt around the house",
+        "playful",
+        "No phones"
+      ]
+    }
+  ]
+}
