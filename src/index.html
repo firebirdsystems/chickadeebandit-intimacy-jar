@@ -302,6 +302,13 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
       return payload;
     }
 
+    // Only wording this app wrote for the reader is shown; the hub's own error
+    // text goes to the console and the reader gets the fixed line.
+    function failText(e, line) {
+      if (!e?.forUser) console.error(e);
+      return e?.forUser ? e.message : line;
+    }
+
     async function markItemTried(id, rating, note) {
       if (!ME) {
         return { state_at: new Date().toISOString(), rating, note: note || null };
@@ -377,7 +384,13 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ partner_id: partnerId }),
         }) : null;
-        if (res && !res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Could not save partner");
+        if (res && !res.ok) {
+          // A refusal (4xx) is the hub's answer about this choice and is shown
+          // as given; any other failure gets this page's own line below.
+          const refusal = (await res.json().catch(() => null))?.error;
+          const refused = res.status >= 400 && res.status < 500 && typeof refusal === "string" && !!refusal;
+          throw Object.assign(new Error(refusal || `partner ${res.status}`), { forUser: refused });
+        }
         const status = res ? await res.json() : { reciprocal: true };
         partnerReciprocal = status.reciprocal;
         partner = members.find(m => m.id === partnerId) ?? null;
@@ -391,7 +404,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         showMain();
       } catch(e) {
         if (btn) { btn.disabled = false; btn.textContent = "Get Started"; }
-        hubAlert(e.message ?? "Could not save partner");
+        hubAlert(failText(e, "Couldn’t save your partner — try again."));
       }
     };
 
@@ -467,7 +480,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
           created_at: now,
         };
         if (newItem.notes.length > 2000) {
-          throw new Error("Notes must be 2,000 characters or fewer");
+          throw Object.assign(new Error("Notes must be 2,000 characters or fewer"), { forUser: true });
         }
         if (ME) {
           await db(
@@ -480,7 +493,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         render();
       } catch(e) {
         if (btn) { btn.disabled = false; btn.textContent = "Add to Jar"; }
-        hubAlert(e.message ?? "Could not add this idea");
+        hubAlert(failText(e, "Couldn’t add this idea — try again."));
       }
     };
 
@@ -559,7 +572,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
       try {
         const triedNote = document.getElementById("f-tried-note")?.value.trim() ?? "";
         const rating    = selectedRating || null;
-        if (triedNote.length > 1000) throw new Error("Note must be 1,000 characters or fewer");
+        if (triedNote.length > 1000) throw Object.assign(new Error("Note must be 1,000 characters or fewer"), { forUser: true });
         const result = await markItemTried(drawnItem.id, rating, triedNote);
         items = items.map(i => i.id === drawnItem.id
           ? { ...i, tried_at: result.state_at, rating: result.rating, tried_note: result.note }
@@ -568,7 +581,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         render();
       } catch(e) {
         if (btn) { btn.disabled = false; btn.textContent = "Save"; }
-        hubAlert(e.message ?? "Could not mark this idea tried");
+        hubAlert(failText(e, "Couldn’t mark this idea tried — try again."));
       }
     };
 
@@ -582,7 +595,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         items = items.filter(i => i.id !== id);
         render();
       } catch (e) {
-        hubAlert(e.message ?? "Could not remove this idea");
+        hubAlert(failText(e, "Couldn’t remove this idea — try again."));
       }
     };
 
