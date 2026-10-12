@@ -124,6 +124,8 @@
     .empty-state { text-align: center; padding: 32px 20px; color: var(--hub-text-muted, #6b7280); }
     .empty-state .empty-icon { margin-bottom: 10px; }
     .empty-state p { font-size: 0.9rem; }
+    .load-error { margin: 16px; padding: 10px 14px; border-radius: 10px; background: var(--hub-tint-danger, #fee2e2); color: var(--hub-tint-danger-fg, #b91c1c); font-size: 0.9rem; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+    .load-error-retry { background: none; border: 1px solid currentColor; border-radius: 8px; padding: 5px 10px; font: inherit; font-weight: 600; color: inherit; cursor: pointer; flex-shrink: 0; }
 
     /* ── Buttons ── */
     .btn-primary {
@@ -293,9 +295,9 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sql, params }),
       });
-      const payload = await res.json().catch(() => ({}));
-      if (!res.ok || payload.error) {
-        throw new Error(payload.error ?? `Database request failed (${res.status})`);
+      const payload = await res.json().catch(() => null);
+      if (!res.ok || !payload || typeof payload !== "object" || payload.error) {
+        throw new Error(payload?.error ?? `Database request failed (${res.status})`);
       }
       return payload;
     }
@@ -323,16 +325,22 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
         ];
         return;
       }
-      try {
-        const res = await fetch(`${CONTEXT}?keys=family.members`);
-        members = ((await res.json())["family.members"]) ?? [];
-      } catch { members = []; }
+      // A roster that could not be read is a failed load, not an empty household.
+      const res = await fetch(`${CONTEXT}?keys=family.members`);
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || typeof json !== "object" || json.error || (Array.isArray(json.$errors) && json.$errors.includes("family.members"))) throw new Error("Couldn’t reach the hub. Try again.");
+      members = json["family.members"] ?? [];
     }
 
     async function loadPartner() {
       if (!ME) return null;
       const res = await fetch(`/run/${APP_ID}/api/partner`);
-      const status = res.ok ? await res.json() : { partner_id: null, reciprocal: false };
+      // "No partner" is a 200 with a null partner_id; any other answer is a
+      // failed lookup and must not read as unpaired. So is a linked partner
+      // with no member list to find them in.
+      if (!res.ok) throw new Error("Couldn’t reach the hub. Try again.");
+      const status = await res.json();
+      if (status.partner_id && !members.length) throw new Error("Couldn’t reach the hub. Try again.");
       partnerReciprocal = status.reciprocal;
       return status.partner_id ? (members.find(m => m.id === status.partner_id) ?? null) : null;
     }
@@ -369,7 +377,7 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ partner_id: partnerId }),
         }) : null;
-        if (res && !res.ok) throw new Error((await res.json()).error ?? "Could not save partner");
+        if (res && !res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Could not save partner");
         const status = res ? await res.json() : { reciprocal: true };
         partnerReciprocal = status.reciprocal;
         partner = members.find(m => m.id === partnerId) ?? null;
@@ -729,16 +737,39 @@ let searchQ = "";       // in-app search (see logic.js searchableFields)
     document.getElementById("tried-section").addEventListener("click", handleItemAction);
 
     // ── Init ──────────────────────────────────────────────────────────────────
-    (async () => {
-      await loadMembers();
-      partner = await loadPartner();
-      if (!partner || !partnerReciprocal) {
-        window.showSetup();
-      } else {
-        await loadItems();
-        showMain();
+    // A failed first load shows this banner in place of both views: the setup
+    // view would say "you have no partner" and the main view "The jar is
+    // empty", and neither is known.
+    function showLoadError(failed) {
+      let banner = document.querySelector('[data-testid="load-error"]');
+      if (!failed) { banner?.remove(); return; }
+      document.getElementById("view-setup").classList.remove("active");
+      document.getElementById("view-main").classList.remove("active");
+      if (banner) return;
+      banner = document.createElement("div");
+      banner.className = "load-error";
+      banner.dataset.testid = "load-error";
+      banner.setAttribute("role", "alert");
+      banner.innerHTML = `<span>Couldn’t load the jar.</span> <button type="button" class="load-error-retry" data-testid="load-retry">Try again</button>`;
+      banner.querySelector("button").addEventListener("click", firstLoad);
+      document.body.prepend(banner);
+    }
+
+    async function firstLoad() {
+      let paired = false;
+      try {
+        await loadMembers();
+        partner = await loadPartner();
+        paired = !!partner && partnerReciprocal;
+        if (paired) await loadItems();
+      } catch {
+        showLoadError(true);
+        return;
       }
-    })();
+      showLoadError(false);
+      if (paired) showMain(); else window.showSetup();
+    }
+    firstLoad();
   </script>
 </body>
 </html>

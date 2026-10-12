@@ -71,7 +71,7 @@ describe("security and schema hardening", () => {
   });
 
   it("checks DB responses and uses the trusted state endpoint", () => {
-    expect(indexHtml).toContain("if (!res.ok || payload.error)");
+    expect(indexHtml).toContain('if (!res.ok || !payload || typeof payload !== "object" || payload.error)');
     expect(indexHtml).toContain(`/api/couple-item-state`);
     expect(indexHtml).not.toContain("UPDATE app_intimacy_jar__jar_items");
   });
