@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS app_intimacy_jar__partner_config (
 );
 
 CREATE TABLE IF NOT EXISTS app_intimacy_jar__jar_items (
-  id           TEXT PRIMARY KEY CHECK (length(id) BETWEEN 1 AND 100),
+  id           TEXT NOT NULL PRIMARY KEY CHECK (length(id) BETWEEN 1 AND 100),
   created_by   TEXT NOT NULL,
   title        TEXT NOT NULL,
   notes        TEXT,
